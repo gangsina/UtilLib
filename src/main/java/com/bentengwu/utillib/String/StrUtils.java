@@ -345,6 +345,17 @@ public class StrUtils {
 			return sb.toString();
 		}
 	}
+
+	/**
+	 * 复用org.apache.commons.lang.StringUtils的方法.
+	 * @param src 源字符串
+	 * @param bf  需要被替换的字符串
+	 * @param after 替换后的字符串
+	 * @return 完成替换的字符串
+	 */
+	public static String replaceEach(String src, String[] bf, String[] after) {
+		return StringUtils.replaceEach(src, bf, after);
+	}
 	
 	public static void main(String[] args) {
 		System.out.println(replaceStrByIndex("https://adsfa?adsfa=?", "?", 1, "小名"));
@@ -412,8 +423,7 @@ public class StrUtils {
 	public static String byteToString(byte bytes[], char ch, int radix) {
 		String sRet = "";
 		for (int i = 0; i < bytes.length; i++) {
-			if (i > 0)
-				sRet = String.valueOf(String.valueOf(sRet)).concat(",");
+			if (i > 0) sRet = String.valueOf(String.valueOf(sRet)).concat(",");
 			sRet = String.valueOf(sRet)
 					+ String.valueOf(Integer.toString(bytes[i], radix));
 		}

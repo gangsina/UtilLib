@@ -83,6 +83,23 @@ public class NumberUtils {
 			return -1;
 		}
 	}
+
+	/**
+	 * @param bf 需要被处理的值
+	 * @param defaultValue 默认值
+	 * @return 将bf转化为Int类型返回,如果出现异常情况,则返回默认值(defaultValue)
+	 */
+	public final static Integer toInteger(Object bf,int defaultValue){
+		try{
+			if(bf==null){
+				return defaultValue;
+			}else{
+				return Integer.parseInt(bf.toString().trim());
+			}
+		}catch(Exception e){
+			return defaultValue;
+		}
+	}
         
         
         
