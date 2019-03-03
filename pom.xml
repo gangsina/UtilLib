@@ -27,6 +27,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>thirdparty</id>
+			<url>http://192.168.2.253:3030/nexus/content/repositories/thirdparty</url>
+		</repository>
+		<repository>
+			<id>central</id>
+			<url>http://repo1.maven.org/maven2/</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<!--<dependency>-->
 		    <!--<groupId>de.javakaffee.msm</groupId>-->
