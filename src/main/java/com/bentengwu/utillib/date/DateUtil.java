@@ -729,7 +729,21 @@ public class DateUtil
 			d=cal.getTime();   
 		}   
 		return   count;   
-	}   
+	}
+
+	/**
+	 * 获取两个日期之间间隔自然日的天数.
+	 * @param startDate 开始时间  必须是精确到天的。
+	 * @param endDate	结束时间 必须是精确到天的。
+	 * @return	天数.
+	 */
+	public static int getNatureDays(final Date startDate, final Date endDate) {
+		int i=0;
+		for (Date indexDate = startDate; indexDate.getTime() <= endDate.getTime(); indexDate=DateUtils.addDays(indexDate,1)) {
+			i++;
+		}
+		return ++i;
+	}
 	
 	/**
 	 * 获取当前时间所在的周的第一天是哪一天。
@@ -752,9 +766,15 @@ public class DateUtil
         Date date = cal.getTime();
         return  convertDate2String(date);
     }
-	    
+
+
+
+
     public static void main(String[] args) {
-    	System.out.println(getDateBeforeMonth(3));
+//    	System.out.println(getDateBeforeMonth(3));
+		Date d1 = new Date();
+		Date d2 = DateUtil.convertString2Date("2019-03-10");
+		System.out.println(getNatureDays(d1,d2));
 	}
 }
 
