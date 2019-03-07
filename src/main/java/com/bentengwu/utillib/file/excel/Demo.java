@@ -20,6 +20,7 @@ public class Demo {
          String[] fieldNames = new String[]{"国家","厂商","机型","下载用户数","应用名称","结算比例","原始收入","合同比例","当前汇率","预估分成","统计日期"};
     	   List<String[]> ss=new ArrayList<String[]>();   
     	   ss.add(new String[]{"印尼","aux","0.00000023323"});
+    	   ss.add(new String[]{"中国","asfd","0.00000023323"});
     	   List<ExcelSheetParam> list= new ArrayList<ExcelSheetParam>();
     	   ExcelSheetParam p =null;
     	   p = new ExcelSheetParam();
@@ -43,8 +44,8 @@ public class Demo {
     	}
     }
     
-     public static void main(String[] args) throws Exception {  
-//         makeExcel_demo();
-         getDataFromSheet_demo();
+     public static void main(String[] args) throws Exception {
+         makeExcel_demo();
+//         getDataFromSheet_demo();
      }
 }

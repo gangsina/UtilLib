@@ -744,6 +744,21 @@ public class DateUtil
 		}
 		return ++i;
 	}
+
+	/**
+	 * @param _startDate 开始时间。 格式：yyyy-MM-dd
+	 * @param _endDate	结束时间。	 格式：yyyy-MM-dd
+	 * @return 间隔的天数。
+	 */
+	public static int getNatureDays( String _startDate,  String _endDate) {
+		Date startDate = convertString2Date(_startDate);
+		Date endDate = convertString2Date(_endDate);
+		int i = 0;
+		for (Date indexDate = startDate; indexDate.getTime() <= endDate.getTime(); indexDate = DateUtils.addDays(indexDate, 1)) {
+			i++;
+		}
+		return ++i;
+	}
 	
 	/**
 	 * 获取当前时间所在的周的第一天是哪一天。
