@@ -8,5 +8,5 @@ import org.slf4j.Logger;
  * @Date 2019/3/7 18:19.
  */
 public abstract class UtilAbstract {
-    public final static  Logger logger = LoggerFactory.getLogger(this.getClass());
+    public final static  Logger logger = LoggerFactory.getLogger(UtilAbstract.class);
 }

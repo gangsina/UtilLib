@@ -5,14 +5,21 @@ import com.bentengwu.utillib.validate.ValidateUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
 
-import javax.print.Doc;
-
 /**
  * 提取一些支持Mongo操作的类!
  * @Author <a href="bentengwu@163.com">thender.xu</a>
  * @Date 2019/3/7 18:16.
  */
 public  class UtilMongo extends UtilAbstract{
+
+    public static final String _GROUP = "$group";
+    public static final String _SUM = "$sum";
+    public static final String _SORT = "$sort";
+    public static final String _MATCH = "$match";
+
+    public static final String _$ = "$";
+    public static final String _DOT = ".";
+
 
     private UtilMongo(){}
 
@@ -26,7 +33,7 @@ public  class UtilMongo extends UtilAbstract{
         ValidateUtils.validateParams(colNames);
         Document doc = new Document();
         for (String col : colNames) {
-            doc.put(col, "$" + col);
+            doc.put(col, _$ + col);
         }
         return doc;
     }
@@ -43,7 +50,7 @@ public  class UtilMongo extends UtilAbstract{
 
         Document doc = new Document();
         for (String col : colNames) {
-            doc.put(col, StringUtils.join(new String[]{"$", groupAlias, ".", col}));
+            doc.put(col, StringUtils.join(new String[]{_$, groupAlias, _DOT, col}));
         }
         return doc;
     }
@@ -90,8 +97,20 @@ public  class UtilMongo extends UtilAbstract{
      * @return   _count1:{$sum:"$_id._count"}
      */
     public static final KV buildSumDoc(String groupAlias, String sumRetAlias, String sumColName) {
-        Document _sumSubDoc = new Document("$sum", StringUtils.join(new String[]{"$", groupAlias, ".", sumColName}));
+        Document _sumSubDoc = new Document(_SUM, StringUtils.join(new String[]{_$, groupAlias, _DOT, sumColName}));
         KV _sumDoc = new KV(sumRetAlias, _sumSubDoc);
+        return _sumDoc;
+    }
+
+
+    /**
+     * @param sumAlias eg: "_count1"
+     * @param sumCol    eg: "_count"
+     * @return _count1:{$sum:_count}
+     */
+    public static final KV buildSumDoc(String sumAlias, String sumCol) {
+        Document _sumSubDoc = new Document(_SUM, StringUtils.join(new String[]{_$, sumCol}));
+        KV _sumDoc = new KV(sumAlias, _sumSubDoc);
         return _sumDoc;
     }
 
@@ -105,35 +124,29 @@ public  class UtilMongo extends UtilAbstract{
     }
     /**
      *
-     * @param groupAlias   指的是用于group by在那些字段组成 一个新的字段的别名。
-     * @param sumRetAlias  计算出结果后，给这个结果一个名字
-     * @param sumColName   用于sum的字段.
-     * @param cols         计算前的结果，用于计算的数据源。
+     * @param _idAlias    指的是用于group by在那些字段组成 一个新的字段的别名。
+     * @param _sumAlias   计算出结果后，给这个结果一个名字
+     * @param _sumCol     用于sum的字段.
      * @param groupByCols  可以用sql来理解，用于group by的字段。
      * @return
+     *  eg: { "$group" : { "_id" : { "agentName" : "$agentName", "btnName" : "$btnName" }, "_count" : { "$sum" : "$_count" } } }
+     *
      */
-    public static final Document[] _sumGroup(String groupAlias, String sumRetAlias, String sumColName,
-                                        String[] cols, String[] groupByCols) {
-        //group cols
-        Document _id_colsDoc = buildDoc(groupAlias, cols);
-        Document groupDoc = new Document("$group", _id_colsDoc);
-
+    public static final Document _sumGroup(String _idAlias, String _sumAlias, String _sumCol,
+                                        String[] groupByCols) {
         // group by cols and sum
-        Document _id_groupbyColsDoc = buildDocWGroupAlias2(groupAlias, groupByCols);
-        KV _sumDoc = buildSumDoc(groupAlias, sumRetAlias, sumColName);
-        put(_id_groupbyColsDoc,_sumDoc);
+        Document _id_groupbyColsDoc = buildDoc(_idAlias, groupByCols);
+        KV _sumDoc = buildSumDoc(_sumAlias, _sumCol);
+        put(_id_groupbyColsDoc, _sumDoc);
 
-        Document groupByDoc = new Document("$group", _id_groupbyColsDoc);
-
-        Document[] retDoc = new Document[2];
-        retDoc[0] = groupDoc;
-        retDoc[1] = groupByDoc;
-
-        return retDoc;
+        Document groupByDoc = new Document(_GROUP, _id_groupbyColsDoc);
+        return groupByDoc;
     }
 
+
+
     /**
-     * @param cols  eg: _id.agentName,_id.btnName,_count
+     * @param sortCols  eg: _id.agentName,_id.btnName,_count
      * @param order eg: -1,-1,-1
      * @return      eg: $sort:{
          *                  "_id.agentName":-1,
@@ -141,13 +154,31 @@ public  class UtilMongo extends UtilAbstract{
          *                  _count:-1
                         }
      */
-    public static final Document _sort(String[] cols, int[] order) {
+    public static final Document _sort(String[] sortCols, int[] order) {
         Document doc = new Document();
-        KV kv = null;
-        for (int i = 0; i < cols.length; i++) {
-            doc.put(cols[i], order[i]);
+        for (int i = 0; i < sortCols.length; i++) {
+            doc.put(sortCols[i], order[i]);
         }
-        Document sortDoc = new Document("$sort", doc);
+        Document sortDoc = new Document(_SORT, doc);
         return sortDoc;
     }
+
+
+
+
+    public static void main(String[] args) {
+        String idAlias = "_id";
+        String sumAlias = "_count";
+        String sumCol = "_count";
+        String[] groupByCols = new String[]{"agentName", "btnName"};
+        Document doc = _sumGroup(idAlias, sumAlias, sumCol, groupByCols);
+        System.out.println(doc.toJson());
+
+        String[] sortCols = new String[]{"_id.agentName","_id.btnName","_count"};
+        int[] order = new int[]{-1, -1, -1};
+
+        System.out.println(_sort(sortCols,order).toJson());
+    }
+
+
 }
