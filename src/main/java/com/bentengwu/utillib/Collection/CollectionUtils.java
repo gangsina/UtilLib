@@ -1,6 +1,10 @@
 package com.bentengwu.utillib.Collection;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @Author <a href="bentengwu@163.com">thender.xu</a>
@@ -24,5 +28,21 @@ public abstract class CollectionUtils {
      */
     public static final void addAllArgs(Collection collection,Object[] args) {
         addAll(collection,args);
+    }
+
+    /**
+     * 建一个带默认值的数组。
+     * @param _defaultVal 默认值
+     * @param length 长度
+     * @return  对应长度的数组。
+     */
+    public static final <T> T[] newArray(T _defaultVal, int length) {
+        List<T> list = new ArrayList<>(length);
+
+        for (int i =0;i<length;i++) {
+            list.add(_defaultVal);
+        }
+
+       return  (T[])list.toArray();
     }
 }
