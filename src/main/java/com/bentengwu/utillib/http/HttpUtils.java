@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -251,8 +252,27 @@ public class HttpUtils {
 			client = null;
 		}
 	}
-	
-        
+
+	/**
+	 * 先读  X-FORWARDED-FOR 失败后 读 X-Real-IP 再失败后 读 request.getRemoteAddr()
+	 * @param request
+	 * @return 获取失败： Failed to get IP
+	 * 			获取成功： 返回对应的IP。
+	 */
+	public static final String getIp(HttpServletRequest request) {
+		String ipAddress = request.getHeader("X-FORWARDED-FOR");
+		if (ipAddress == null) {
+			ipAddress = request.getHeader("X-Real-IP");
+		}
+
+		if (ipAddress == null) {
+			ipAddress = request.getRemoteAddr();
+		}
+
+		return ipAddress==null?"Failed to get IP":ipAddress;
+	}
+
+
 	public static void main(String[] args) throws IOException{
 		String href = "http://www.baidu.com";
 		String s = HttpUtils.requestByGet(href, null);
