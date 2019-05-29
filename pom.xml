@@ -5,7 +5,7 @@
 
 	<groupId>com.bentengwu</groupId>
 	<artifactId>UtilLib</artifactId>
-	<version>beta3.0</version>
+	<version>beta4-cutdirtycode</version>
 	<packaging>jar</packaging>
 	
 	<name>UtilLib</name>
@@ -43,16 +43,6 @@
 			<artifactId>aliyun-sdk-oss</artifactId>
 			<version>2.8.3</version>
 		</dependency>
-		<!--<dependency>-->
-		    <!--<groupId>de.javakaffee.msm</groupId>-->
-		    <!--<artifactId>memcached-session-manager-tc7</artifactId>-->
-		    <!--<version>1.9.5</version>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-		    <!--<groupId>com.google.code.simple-spring-memcached</groupId>-->
-		    <!--<artifactId>spymemcached</artifactId>-->
-		    <!--<version>2.8.4</version>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -167,21 +157,16 @@
 			<version>20090211</version>
 		</dependency>
 		<dependency>
-			<groupId>com.ewppay</groupId>
-			<artifactId>ewp-sms</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>de.sciss</groupId>
 			<artifactId>jsyntaxpane</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-			<dependency>
+		<dependency>
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
 				<version>2.2.4</version>
 			</dependency>
-						<dependency>
+		<dependency>
 		    <groupId>bouncycastle</groupId>
 		    <artifactId>bcprov-jdk16</artifactId>
 		    <version>140</version>
