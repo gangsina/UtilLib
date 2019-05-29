@@ -272,6 +272,27 @@ public class HttpUtils {
 		return ipAddress==null?"Failed to get IP":ipAddress;
 	}
 
+	/**
+	 * @param request
+	 * @param keyName
+	 * @param _class 对应的类
+	 * @param <T>
+	 * @return 相应的对象实例。
+	 * 	null 不存在或者 相应的对象不匹配
+	 * 	具体的对象.
+	 */
+	public static final <T> T getRequestAttr(HttpServletRequest request,String keyName, Class<T> _class) {
+		Object attr = request.getAttribute(keyName);
+		if (attr == null) {
+			return null;
+		}
+		try {
+			return (T) attr;
+		} catch (Exception ex) {
+			logger.debug(ex.getMessage(), ex);
+			return null;
+		}
+	}
 
 	public static void main(String[] args) throws IOException{
 		String href = "http://www.baidu.com";

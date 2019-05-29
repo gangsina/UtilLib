@@ -935,5 +935,12 @@ public class StrUtils {
         	if(t==null)return "null";
         	return StringUtils.replace(ToStringBuilder.reflectionToString(t), t.getClass().getPackage().getName(), "");
         }
-        
+
+	/**
+	 * @param strings 1个或者多个字符串
+	 * @return 拼接后的字符串.
+	 */
+	public static String join(String... strings) {
+		return StringUtils.join(strings);
+	}
 }

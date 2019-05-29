@@ -1,6 +1,8 @@
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.Maps;
 
@@ -19,6 +21,9 @@ public class Test {
     public static void main(String[] args) throws IOException {
 		String password  = DigestUtils.md5Hex("123456");
 		System.out.println(password);
+		Set<String> set = new HashSet<>();
+		System.out.println(set.contains(null));
+
 //        TomcatServerXml tomcat = TomcatServerXml.getInstance("D:\\uninstall\\tomcat\\conf\\server.xml");
 //    	Rd.p(Math.pow(10, 4)-1);
 //        for(int i=0;i<1000;i++){

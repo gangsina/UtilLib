@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 
 import com.bentengwu.utillib.String.StrUtils;
 import com.bentengwu.utillib.code.EncodeUtils;
+import com.bentengwu.utillib.stream.StreamUtil;
 import com.bentengwu.utillib.validate.ValidateUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -271,7 +272,7 @@ public class Rd {
      * @param path
      * @param content
      */
-    public static synchronized void write(String path, String content, String encode) {
+    public static  void write(String path, String content, String encode) {
         OutputStreamWriter output = null;
         FileOutputStream fw = null;
         try {
@@ -297,30 +298,46 @@ public class Rd {
 
     /**
      * 写文件 ，不会覆盖原有文件内容。在最后添加。
-     *
+     * 注意： 在添加时前，会自动增加换行符。
      * @param path
      * @param content
      */
-    public static synchronized void apWrite(String path, String content, String encode) {
+    public static  void apWrite(String path, String content, String encode) {
+        apWrite(new File(path),content,encode,true);
+    }
+
+    /**
+     * 2019年 恭喜你RD,你已经10岁了！
+     * @param f
+     * @param content
+     * @param encode
+     * @param withLineSeparator 是否在追加内容前，加上换行.
+     */
+    public static  void apWrite(File f, String content, String encode,boolean withLineSeparator) {
+        write(f, content, encode, true, withLineSeparator);
+    }
+
+    /**
+     * @param f 文件
+     * @param content 内容
+     * @param encode 编码
+     * @param append 是否添加到文件末尾。 true 是， false 覆盖.
+     * @param withLineSeparator 当 append==true生效. 意思是追加前，是否增加 换行符（换行）
+     */
+    public static  void write(File f, String content, String encode,boolean append,boolean withLineSeparator) {
         FileOutputStream fos = null;
         OutputStreamWriter osw = null;
         try {
-            File f = new File(path);
-            fos = new FileOutputStream(f, true);
+            mkParentDir(f);
+            fos = new FileOutputStream(f, append);
             osw = new OutputStreamWriter(fos, encode);
-            osw.write(PathUtil.getLineSeparator());
+            if (append && withLineSeparator) osw.write(PathUtil.getLineSeparator());
             osw.write(content);
             osw.flush();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
-            try {
-                osw.close();
-                fos.close();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-
-            }
+            StreamUtil.close(osw);
         }
     }
 
@@ -335,14 +352,30 @@ public class Rd {
         return dirExits(f);
     }
 
+
+    public static final boolean exists(File f) {
+        return f.exists();
+    }
+
+    public static final boolean exists(String f) {
+        return exists(new File(f));
+    }
+
     /**
      * 判断文件是否存在
+     *
      */
     public static boolean dirExits(File f) {
-        if (!f.exists()) {
-            return false;
-        }
-        return true;
+        return exists(f);
+    }
+
+    public static final void mkParentDir(String file) {
+        File _file = new File(file);
+        mkParentDir(_file);
+    }
+
+    public static final void mkParentDir(File file) {
+        mkDir(file.getParentFile());
     }
 
     /**
@@ -365,17 +398,31 @@ public class Rd {
     }
 
     /**
-     * 创建新文件
+     * 创建新文件，当父目录不再是，直接创建父目录后在创建文件，如果文件已经存在，则直接返回true.
      * @param file 文件的绝对路径
-     * @return
+     * @return 文件本来就存在时， true
+     *         文件不存在时， ==createNewFile()
      */
     public static boolean mkFile(String file) {
         ValidateUtils.validateParams(file);
+        return touch(new File(file));
+    }
+
+    public static boolean touch(File _file) {
         try {
-            return new File(file).createNewFile();
+            if (_file.exists()) {
+                return true;
+            }else{
+                mkParentDir(_file);
+                return _file.createNewFile();
+            }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static void touch(String file) {
+        mkFile(file);
     }
 
     /**
@@ -399,8 +446,19 @@ public class Rd {
     }
 
     public static void main(String[] args) {
-        String s = "E:\\tmp\\2013_08_07";
-        String aim = "e:\\tmp\\1";
-        UtilFile.copyDir(s, aim);
+//        String s = "E:\\tmp\\2013_08_07";
+//        String aim = "e:\\tmp\\1";
+//        UtilFile.copyDir(s, aim);
+        try {
+
+            mkParentDir("e:\\tmp\\asdf\\1\\2\\3.txt");
+            mkFile("e:\\tmp\\asdf\\1\\2\\3.txt");
+            File f = new File("e:\\tmp\\asdf\\1\\2\\3.txt");
+            apWrite(f.getPath(), "asdf", EncodeUtils.UTF8);
+            apWrite(f.getPath(), "asdf", EncodeUtils.UTF8);
+            apWrite(f.getPath(), "asdf", EncodeUtils.UTF8);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }
