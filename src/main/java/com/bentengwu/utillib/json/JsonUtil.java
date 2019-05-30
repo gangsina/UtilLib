@@ -6,9 +6,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
+import com.bentengwu.utillib.String.StrUtils;
 import com.bentengwu.utillib.code.EncodeUtils;
+import com.bentengwu.utillib.exception.ExceptionUtils;
 import com.bentengwu.utillib.stream.StreamUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.codec.binary.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -328,6 +333,60 @@ public class JsonUtil {
 			logger.error("", jsonEx);
 			throw new RuntimeException("BASE64解码JSON OBJECT 异常", jsonEx);
 		}
+	}
+
+	/**
+	 * @param obj 实例对象
+	 * @return 转化后的json对象
+	 */
+	public static JSONObject toJson(Object obj) {
+		return toJson(obj, true, false);
+	}
+	/**
+	 * @param obj 实例对象
+	 * @param holdEmpty 是否保留空字符串对象
+	 * @param holdNullWithEmptyStr 是否用空字符串保留null对象
+	 * @return 转化后的json对象
+	 */
+	public static JSONObject toJson(Object obj, boolean holdEmpty, boolean holdNullWithEmptyStr) {
+		try {
+			return new JSONObject(toJsonStr(obj, holdEmpty, holdNullWithEmptyStr));
+		} catch (JSONException e) {
+			throw ExceptionUtils.newRE(e,true,logger);
+		}
+	}
+
+
+	/**
+	 * @param obj 实例对象
+	 * @param holdEmptyStr 是否保留空字符串对象.
+	 * @param holdNullWithEmptyStr 是否用空字符串保留null对象
+	 * @return 转化后的json对象
+	 */
+	public static String toJsonStr(Object obj, boolean holdEmptyStr, boolean holdNullWithEmptyStr) {
+		Gson gson = null;
+		if(holdNullWithEmptyStr) gson = new GsonBuilder().serializeNulls().create();
+		else	gson = new Gson();
+		String json = gson.toJson(obj);
+
+		if (holdNullWithEmptyStr) {
+			json = StrUtils.replaceStr(json, ":null", ":\"\"");
+		}
+
+		if (!holdEmptyStr) {
+			String regix = "(,?)(\"{1})[a-zA-Z0-9_]{0,200}\":\"\"(,?)";
+			json = Pattern.compile(regix).matcher(json).replaceAll("");
+		}
+
+		return json;
+	}
+
+	/**
+	 * @param obj 对象实例
+	 * @return 字符串
+	 */
+	public static String toJsonStr(Object obj) {
+		return toJsonStr(obj, true, false);
 	}
 
 	@SuppressWarnings("rawtypes")

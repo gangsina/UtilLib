@@ -1,5 +1,7 @@
 package com.bentengwu.utillib.exception;
 
+import org.slf4j.Logger;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -40,5 +42,22 @@ public class ExceptionUtils {
 				pw.close();
 		}
 		
+	}
+
+
+	public static RuntimeException newRE(String exMessage) {
+		return new RuntimeException(exMessage);
+	}
+
+	public static RuntimeException newRE(Exception ex,boolean logit,Logger logger) {
+		if (logit) {
+			log(ex, logger);
+		}
+		return new RuntimeException(ex.getMessage(),ex);
+	}
+
+	public static void log(Exception ex, Logger logger) {
+		logger.warn(ex.getMessage());
+		logger.debug(ex.getMessage(), ex);
 	}
 }
