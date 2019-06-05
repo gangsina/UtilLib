@@ -2,6 +2,8 @@ package com.bentengwu.utillib.map;
 
 import com.bentengwu.utillib.Collection.CollectionUtils;
 import com.bentengwu.utillib.String.StringFormatUtil;
+import com.bentengwu.utillib.UtilConversion;
+import com.bentengwu.utillib.validate.ValidateUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -10,6 +12,7 @@ import com.bentengwu.utillib.CommonUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static  com.bentengwu.utillib.exception.ExceptionUtils.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -451,6 +454,40 @@ public abstract class MapUtil {
 			logger.debug(e.getMessage(),e);
 			throw new RuntimeException(e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * 读取字符串类型的值
+	 * @param map 集合
+	 * @param key 键
+	 * @return 键对应的字符串值.  不存在对应的key返回 null
+	 * @throw key为空, map为空等特殊情况抛出运行时异常.
+	 */
+	public static final String getStr(final Map map, String key) {
+		return get(map, key, String.class);
+	}
+
+	/**
+	 * 读取对应的key的值.
+	 * @param map 键值对集合
+	 * @param key 键
+	 * @param _class
+	 * @return 对应的key的值,不存在对应的key返回 null
+	 * @throw key为空, map为空等特殊情况抛出运行时异常.
+	 */
+	public static final <T> T get(final Map map,String key, Class<T> _class) {
+		if (!containKey(map, key)) {
+			return null;
+		}
+		return UtilConversion.convert(_class, map.get(key));
+	}
+
+	public static final boolean containKey(final Map map, String key) {
+		ValidateUtils.validateParams(key);
+		if (map == null) {
+			newRE("params-error: map-->null");
+		}
+		return map.containsKey(key);
 	}
 	
 }

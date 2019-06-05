@@ -1,5 +1,6 @@
 package com.bentengwu.utillib;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -8,4 +9,11 @@ import org.slf4j.LoggerFactory;
  */
 public class UtilLogger {
     public static final org.slf4j.Logger logger = LoggerFactory.getLogger("UtilLib");
+
+
+    public static final void log(Logger _logger, Exception ex, String appendMessage) {
+        StringBuilder message = new StringBuilder(appendMessage);
+        _logger.warn("{}==>{}", message, ex.getMessage());
+        _logger.debug("{}==>{}",message, ex.getMessage(), ex);
+    }
 }

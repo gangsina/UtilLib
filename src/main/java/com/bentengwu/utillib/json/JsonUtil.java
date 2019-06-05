@@ -10,8 +10,10 @@ import java.util.regex.Pattern;
 
 import com.bentengwu.utillib.String.StrUtils;
 import com.bentengwu.utillib.code.EncodeUtils;
+import com.bentengwu.utillib.date.DateUtil;
 import com.bentengwu.utillib.exception.ExceptionUtils;
 import com.bentengwu.utillib.stream.StreamUtil;
+import com.bentengwu.utillib.validate.ValidateUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.codec.binary.StringUtils;
@@ -379,6 +381,31 @@ public class JsonUtil {
 		}
 
 		return json;
+	}
+
+	/**
+	 * 通过Gson将json转化为java bean.
+	 * @param json json格式的数据
+	 * @param _class
+	 * @return  T java bean.
+	 */
+	public static <T> T toBean(String json, Class<T> _class) {
+		ValidateUtils.validateParams(json);
+		Gson gson = new GsonBuilder().setDateFormat(DateUtil.LONG_DATE_FORMAT).create();
+		return gson.fromJson(json, _class);
+	}
+
+	/**
+	 * 通过Gson将json转化为java bean.
+	 * @param json json格式的数据
+	 * @param _class
+	 * @return  T java bean.
+	 */
+	public static <T> T toBean(JSONObject json, Class<T> _class) {
+		if (json == null) {
+			return null;
+		}
+		return toBean(json.toString(), _class);
 	}
 
 	/**

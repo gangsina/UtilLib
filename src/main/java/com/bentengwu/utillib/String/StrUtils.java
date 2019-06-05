@@ -359,6 +359,18 @@ public class StrUtils {
 	
 	public static void main(String[] args) {
 		System.out.println(replaceStrByIndex("https://adsfa?adsfa=?", "?", 1, "小名"));
+
+		String[] args1 = splitFirst("-1,asdf,asdfa,asdf", ",");
+		for (String arg : args1) {
+			System.out.println(arg);
+
+		}
+
+		args1 = splitFirst(",-1", ",");
+		for (String arg : args1) {
+			System.out.println(arg);
+
+		}
 	}
 	/**
 	 * 替换字符串
@@ -466,6 +478,31 @@ public class StrUtils {
 			return null;
 		return  str.split(regx);
 	}
+
+	/**
+	 *
+	 * @param _srcStr 原字符串
+	 * @param regx 分割符
+	 * @return
+	 * 	splitFirst("-1,asdf,asdf",",") == ["-1","asdf,asdf"]
+	 * 	splitFirst(",-1,asdf,asdf",",") == ["-1","asdf,asdf"]
+	 * 	splitFirst(",-1",",") == ["-1"]
+	 * 	splitFirst(",-1",null) ==  null
+	 * 	splitFirst(null,",") ==  null
+	 */
+	public static String[] splitFirst(String _srcStr, String regx) {
+		if (isEmpty(_srcStr) || isEmpty(regx)) {
+			return null;
+		}
+
+		String srcStr = trimStart(_srcStr, regx);
+		int index = srcStr.indexOf(regx);
+		if (index > 0)
+			return new String[]{srcStr.substring(0, index), srcStr.substring(index + 1)};
+		else
+			return new String[]{srcStr};
+	}
+
 
 	public static String transDisplay(String content) {
 		return transDisplay(content, true);
