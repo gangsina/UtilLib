@@ -1,6 +1,7 @@
 package com.bentengwu.utillib.map;
 
 import com.bentengwu.utillib.Collection.CollectionUtils;
+import com.bentengwu.utillib.String.StrUtils;
 import com.bentengwu.utillib.String.StringFormatUtil;
 import com.bentengwu.utillib.UtilConversion;
 import com.bentengwu.utillib.validate.ValidateUtils;
@@ -489,5 +490,61 @@ public abstract class MapUtil {
 		}
 		return map.containsKey(key);
 	}
-	
+
+	/**
+	 *@description  将k:v形式的字符串转化为map
+	 *@author thender email: bentengwu@163.com
+	 *@date 2019/7/3 11:11
+	 *@param kv	 "key:val"
+	 *@return java.util.Map<java.lang.String,java.lang.String>
+	 **/
+	public static final Map<String, String> kv2Map(String kv) {
+		return kv2Map(kv, ":");
+	}
+
+	/**
+	 *@description  将k:v形式的字符串转化为map
+	 *@author thender email: bentengwu@163.com
+	 *@date 2019/7/3 11:11
+	 *@param kv	 "key kvSplit val" --> map(key:val)
+	 * @param kvSplit 用于区分键和值的字符串
+	 *@return java.util.Map<java.lang.String,java.lang.String>
+	 **/
+	public static final Map<String, String> kv2Map(String kv,String kvSplit) {
+		return kv2Map(kv, kvSplit, null);
+	}
+
+	/**
+	 * @description  将k:v形式的字符串转化为map
+	 * @author thender email: bentengwu@163.com
+	 * @date 2019/7/3 11:11
+	 * @param kv	 "key kvSplit val" --> map(key:val)
+	 * @param kvSplit 用于区分键和值的字符串
+	 * @param itemSplit 多个键值对的分隔符. 如果没有传入的话,附值";"
+	 * @return java.util.Map<java.lang.String,java.lang.String>
+	 **/
+	public static final Map<String, String> kv2Map(final String kv,final String kvSplit,String itemSplit) {
+		ValidateUtils.validateParams(kv,kvSplit);
+		Map<String, String> kvMap = new HashMap<>();
+		String _itemSplit = StrUtils.getString(itemSplit, ";");
+		for (String kvItem : StrUtils.split(kv, _itemSplit)) {
+			if (StrUtils.isNotEmpty(kvItem)) {
+				String[] args = StrUtils.split(kvItem, kvSplit);
+				if (args.length > 1) {
+					String key = args[0];
+					String val = args[1];
+					kvMap.put(StringUtils.strip(key,"\"\r\n "), StringUtils.strip(val,"\"\r\n "));
+				}
+			}
+		}
+		return kvMap;
+	}
+
+
+	public static void main(String[] args) {
+		String s = "\"alsdj\"faldf\":\"askdfjk\",\"content\":\"xxxxx\",";
+		Map<String, String> kvmap = kv2Map(s, ":", ",");
+		System.out.println(kvmap);
+		System.out.println(MapUtil._2String(kvmap));
+	}
 }

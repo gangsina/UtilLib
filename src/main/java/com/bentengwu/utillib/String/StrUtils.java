@@ -52,7 +52,37 @@ public class StrUtils {
 	public static boolean isNotEmpty(String str) {
 		return !isEmpty(str);
 	}
-	
+
+	public static String arrayObjToString(Collection collection) {
+		return arrayObjToString(collection.toArray(), ",");
+	}
+
+	/**
+	 *@author thender email: bentengwu@163.com
+	 *@date 2019/6/28 12:12
+	 *@param paramArrayOfString
+	 *@param paramString
+	 *@return java.lang.String
+	 **/
+	public static String arrayObjToString(Object[] paramArrayOfString,String paramString) {
+		if ((paramArrayOfString == null) || (paramArrayOfString.length == 0)) {
+			return "";
+		}
+		if (paramString == null) {
+			paramString = "|";
+		}
+		StringBuilder localStringBuffer = new StringBuilder("");
+		for(Object o : paramArrayOfString ){
+			if(o!=null && isNotEmpty(o.toString())){
+				localStringBuffer.append(o).append(paramString);
+			}
+		}
+		if(localStringBuffer.toString().endsWith(paramString)){
+			return localStringBuffer.toString().substring(0, localStringBuffer.toString().lastIndexOf(paramString));
+		}
+		return localStringBuffer.toString();
+	}
+
 	/**
 	 * 将数组转化为字符串.
 	 *<br />
@@ -80,22 +110,7 @@ public class StrUtils {
 	 */
 	public static String arrayToString(String[] paramArrayOfString,
 			String paramString) {
-		if ((paramArrayOfString == null) || (paramArrayOfString.length == 0)) {
-			return "";
-		}
-		if (paramString == null) {
-			paramString = "|";
-		}
-		StringBuffer localStringBuffer = new StringBuffer("");
-		for(String s : paramArrayOfString ){
-			if(isNotEmpty(s)){
-				localStringBuffer.append(s).append(paramString);
-			}
-		}
-		if(localStringBuffer.toString().endsWith(paramString)){
-			return localStringBuffer.toString().substring(0, localStringBuffer.toString().lastIndexOf(paramString));
-		}
-		return localStringBuffer.toString();
+		return arrayObjToString(paramArrayOfString, paramString);
 	}
 
         
@@ -242,6 +257,7 @@ public class StrUtils {
 
 		return StringUtils.substring(str, startIndex);
 	}
+
 
 	/**
 	 * 替换字符串
@@ -473,7 +489,7 @@ public class StrUtils {
 		return nGet;
 	}
 
-	public static String[] split(String str, String regx) throws Exception {
+	public static String[] split(String str, String regx) {
 		if (isEmpty(str))
 			return null;
 		return  str.split(regx);

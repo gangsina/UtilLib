@@ -16,6 +16,8 @@ import com.bentengwu.utillib.String.StrUtils;
 import com.bentengwu.utillib.code.EncodeUtils;
 import com.bentengwu.utillib.stream.StreamUtil;
 import com.bentengwu.utillib.validate.ValidateUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -342,6 +344,29 @@ public class Rd {
     }
 
     /**
+     *@description 将字节数组写入文件.
+     *@author thender email: bentengwu@163.com
+     *@date 2019/7/3 11:35
+     *@param file
+     *@param content
+     *@param append 是否追加到文件最后. true 追加  false 覆盖.
+     *@return void
+     **/
+    public static final void write(File file, byte[] content, boolean append) {
+        FileOutputStream fos = null;
+        try {
+            mkParentDir(file);
+            fos = new FileOutputStream(file, append);
+            fos.write(content);
+            fos.flush();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            StreamUtil.close(fos);
+        }
+    }
+
+    /**
      * 存在 为true
      *
      * @param path
@@ -445,7 +470,7 @@ public class Rd {
         System.out.println(obj);
     }
 
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
 //        String s = "E:\\tmp\\2013_08_07";
 //        String aim = "e:\\tmp\\1";
 //        UtilFile.copyDir(s, aim);
@@ -460,5 +485,51 @@ public class Rd {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+
+    public static void main2(String[] args) throws IOException {
+        String real = EncodeUtils.hexEncode(FileUtils.readFileToByteArray(new File("E:\\temp\\11\\1.png")));
+        System.out.println("==========");
+        String after = EncodeUtils.hexEncode(FileUtils.readFileToByteArray(new File("E:\\temp\\1.png")));
+        System.out.println(real.equals(after));
+        System.out.println(real.length());
+        System.out.println(after.length());
+        System.out.println(real);
+        System.out.println(after);
+        System.out.println();
+        System.out.println();
+        if (!real.equals(after)) {
+             char[] r =  real.toCharArray();
+             char[ ]    a = after.toCharArray();
+            for (int i = 0; i < r.length; i++) {
+                if (r[i] == a[i]) {
+                    System.out.print(r[i]);
+                }else {
+                    System.err.print(r[i]);
+                }
+            }
+        }
+    }
+
+    public static void main4(String[] args) {
+        byte[] a1 = new byte[100];
+        a1[0] = 1;
+
+
+        byte[] a2 = a1;
+
+        System.out.println(a2);
+        System.out.println(a1);
+    }
+
+    public static void main(String[] args) {
+        String basename = FilenameUtils.getBaseName("e:\\temp\\1.png");
+        String suffix = FilenameUtils.getExtension("e:\\temp\\1.png");
+        String name = FilenameUtils.getName("e:\\temp\\1.png");
+        System.out.println(basename);
+        System.out.println(suffix);
+        System.out.println(name);
+
     }
 }

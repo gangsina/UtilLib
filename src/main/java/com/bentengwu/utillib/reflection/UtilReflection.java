@@ -4,6 +4,7 @@
  */
 package com.bentengwu.utillib.reflection;
 
+import com.bentengwu.utillib.String.StrUtils;
 import com.bentengwu.utillib.file.PathUtil;
 
 import java.lang.reflect.Field;
@@ -136,6 +137,33 @@ public class UtilReflection {
 			logger.error("不可能抛出的异常{}", e.getMessage());
 		}
 		return result;
+	}
+
+	/**
+	 *@description   深度遍历获取对应的值.
+	 * eg: "bean.startDate.year" 将返回obj中bean属性的startDate属性的year属性的值.
+	 *@author thender email: bentengwu@163.com
+	 *@date 2019/7/11 17:06
+	 *@param obj
+ 	*@param fieldName  字段名,支持获取子对象的属性值. eg: "bean.startDate.year"
+	 *@return java.lang.Object
+	 **/
+	public static Object getFieldValueFix(final Object obj, final String fieldName) {
+		if (obj == null || fieldName == null || StrUtils.isEmpty(fieldName)) {
+			return null;
+		}
+
+		String[] cutFields = StringUtils.split(fieldName,".");
+		Object optObj = obj;
+		for (String cutField : cutFields) {
+			if (StrUtils.isNotEmpty(cutField)) {
+				optObj = getFieldValue(optObj, cutField);
+				if (optObj == null) {
+					break;
+				}
+			}
+		}
+		return optObj;
 	}
         
 	
