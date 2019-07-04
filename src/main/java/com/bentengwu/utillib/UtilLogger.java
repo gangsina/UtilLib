@@ -14,6 +14,6 @@ public class UtilLogger {
     public static final void log(Logger _logger, Exception ex, String appendMessage) {
         StringBuilder message = new StringBuilder(appendMessage);
         _logger.warn("{}==>{}", message, ex.getMessage());
-        _logger.debug("{}==>{}",message, ex.getMessage(), ex);
+        _logger.info("{}==>{}",message, ex.getMessage(), ex);
     }
 }

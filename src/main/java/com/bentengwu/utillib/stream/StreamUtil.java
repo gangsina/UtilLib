@@ -1,9 +1,12 @@
 package com.bentengwu.utillib.stream;
 
+import com.google.common.collect.Lists;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.List;
 
 /** 
  * 一般的流操作
@@ -35,6 +38,7 @@ public class StreamUtil {
 		  bw.append(b);
 		  return bw;
 	}
+
 
 	public static void close(OutputStream os) {
 		try {

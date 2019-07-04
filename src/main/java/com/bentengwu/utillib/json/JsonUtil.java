@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.bentengwu.utillib.CommonUtils;
 import com.bentengwu.utillib.String.StrUtils;
+import com.bentengwu.utillib.UtilConversion;
 import com.bentengwu.utillib.code.EncodeUtils;
 import com.bentengwu.utillib.date.DateUtil;
 import com.bentengwu.utillib.exception.ExceptionUtils;
@@ -336,6 +338,25 @@ public class JsonUtil {
 			throw new RuntimeException("BASE64解码JSON OBJECT 异常", jsonEx);
 		}
 	}
+	
+	/**
+	 *@description   读取对应的key的值，如果对应的key不存在或者对应的值并不是_class，则返回null
+	 *@author thender email: bentengwu@163.com
+	 *@date 2019/6/25 17:38
+	 *@param json
+	 *@param key
+	 *@param _class
+	 *@return T
+	 **/
+	public static <T> T get(JSONObject json, String key, Class<T> _class) {
+		try {
+			Object obj = json.get(key);
+			return UtilConversion.convert(_class, obj);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
 
 	/**
 	 * @param obj 实例对象
@@ -392,7 +413,7 @@ public class JsonUtil {
 	public static <T> T toBean(String json, Class<T> _class) {
 		ValidateUtils.validateParams(json);
 		Gson gson = new GsonBuilder().setDateFormat(DateUtil.LONG_DATE_FORMAT).create();
-		return gson.fromJson(json, _class);
+		return gson.fromJson(json.trim(), _class);
 	}
 
 	/**

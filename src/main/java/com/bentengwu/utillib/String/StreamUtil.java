@@ -8,6 +8,7 @@ import java.io.InputStream;
  * @author email: <a href="bentengwu@163.com">徐伟宏</a> 
  * @date 2013-5-27 下午01:25:45 
  */
+@Deprecated
 public abstract class StreamUtil {
 	/**
 	 * 注意:本方法中并没有对InputStreem输入流做关闭操作

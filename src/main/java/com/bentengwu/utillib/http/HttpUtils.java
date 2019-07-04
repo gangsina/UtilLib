@@ -138,7 +138,8 @@ public class HttpUtils {
 					get.setRequestHeader(key, headerMap.get(key));
 				}
 			}
-			client.executeMethod(get);
+			System.out.println(client.getState().toString());
+
 			response = getContentFromStream(get.getResponseBodyAsStream());
 		} catch (IOException e) {
 			throw e;
@@ -295,8 +296,16 @@ public class HttpUtils {
 	}
 
 	public static void main(String[] args) throws IOException{
-		String href = "http://www.baidu.com";
-		String s = HttpUtils.requestByGet(href, null);
-		System.out.println(s);
+		try {
+			Map<String, String> headerMap = new HashMap<>();
+			headerMap.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
+			headerMap.put("scheme", "https");
+			headerMap.put("authority", "sellercentral.amazon.com");
+			headerMap.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
+			String s = HttpUtils.requestByGet("https://sellercentral.amazon.com/fba/profitabilitycalculator/productmatches?searchKey=B00WZR5ULU&profitcalcToken=B00WZR5ULU", headerMap);
+			System.out.println(s);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }
