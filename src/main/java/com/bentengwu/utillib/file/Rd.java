@@ -16,6 +16,7 @@ import com.bentengwu.utillib.String.StrUtils;
 import com.bentengwu.utillib.code.EncodeUtils;
 import com.bentengwu.utillib.stream.StreamUtil;
 import com.bentengwu.utillib.validate.ValidateUtils;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -199,33 +200,11 @@ public class Rd {
      */
     public static String read(File file, String encode) {
         ValidateUtils.validateParams(file,encode);
-        String tempStr = null;
-        StringBuilder sb = new StringBuilder();
-        if (file.exists()) {
-            FileInputStream fileSm = null;
-            InputStreamReader isr = null;
-            BufferedReader br = null;
-            try {
-                fileSm = new FileInputStream(file);
-                isr = new InputStreamReader(fileSm, encode);
-                br = new BufferedReader(isr);
-                while ((tempStr = br.readLine()) != null) {
-                    sb.append(tempStr);
-                    sb.append(PathUtil.getLineSeparator());
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            } finally {
-                try {
-                    br.close();
-                    isr.close();
-                    fileSm.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
+        try {
+            return FileUtils.readFileToString(file, encode);
+        } catch (Exception ex) {
+            throw new RuntimeException("Rd read error!  : " + ex.getMessage(), ex);
         }
-        return sb.toString();
     }
 
     /**
@@ -420,6 +399,15 @@ public class Rd {
      */
     public static boolean mkDir(File file) {
         return file.mkdirs();
+    }
+
+
+    public static boolean rm(String file) {
+       return rm(new File(file));
+    }
+
+    public static boolean rm(File file) {
+        return file.delete();
     }
 
     /**

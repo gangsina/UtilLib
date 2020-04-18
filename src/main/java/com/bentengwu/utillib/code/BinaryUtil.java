@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 
 public class BinaryUtil {
     public BinaryUtil() {
@@ -81,6 +82,18 @@ public class BinaryUtil {
             }
 
             return sb.toString();
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            String _1 = toBase64String(calculateMd5("E:\\Documents\\projects\\openwrt\\WDR7500\\WDR7500-V5-backup2019年8月28日.BIN"));
+            String _2 = toBase64String(calculateMd5("E:\\Documents\\projects\\openwrt\\WDR7500\\WDR7500-V5-backup2019年8月28日2.BIN"));
+            System.out.println(_1);
+            System.out.println(_2);
+            System.out.println(_1.equals(_2));
+        } catch (Exception ex) {
+
         }
     }
 }

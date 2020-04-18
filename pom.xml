@@ -16,10 +16,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -33,11 +29,24 @@
 			<url>http://192.168.2.253:3030/nexus/content/repositories/thirdparty</url>
 		</repository>
 		<repository>
+			<id>nexus-aliyun</id>
+			<name>Nexus aliyun</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
+		</repository>
+		<repository>
 			<id>central</id>
-			<url>http://repo1.maven.org/maven2/</url>
+			<url>https://repo1.maven.org/maven2/</url>
 		</repository>
 	</repositories>
 	<dependencies>
+
+		<dependency>
+			<groupId>net.sourceforge.tess4j</groupId>
+			<artifactId>tess4j</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>com.aliyun.oss</groupId>
 			<artifactId>aliyun-sdk-oss</artifactId>
