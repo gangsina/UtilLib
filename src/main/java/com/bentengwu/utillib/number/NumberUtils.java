@@ -1,9 +1,14 @@
 package com.bentengwu.utillib.number;
 
 import java.text.NumberFormat;
+import java.util.Random;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 
 public class NumberUtils {
+
+	private  static final Random random = new Random();
 
 	/**
 	 * 格式化double,按照四舍五入，小数位数由参数fractionDigits控制
@@ -123,29 +128,29 @@ public class NumberUtils {
 			}
 	}
         
-        /**
-         * 
-         * @param t  
-         * @return 
-         *      toDouble(null)  ==null;
-         *      toDouble("")    ==null;
-         *      toDouble("1.1") ==1.1;
-         *      toDouble(1.1)   ==1.1;
-         *      toDouble("1.1a1")==null;
-         *      toDouble("$#.1a1")==null;
-         */
-        public static Double toDouble(Object t){
-            if(t==null)return null;
-            else if(StringUtils.isBlank(t.toString())){
-                return null;
-            }else{
-                try{
-                    return Double.parseDouble(t.toString());
-                }catch(Exception e){
-                    return null;
-                }
-            }
-        }
+	/**
+	 *
+	 * @param t
+	 * @return
+	 *      toDouble(null)  ==null;
+	 *      toDouble("")    ==null;
+	 *      toDouble("1.1") ==1.1;
+	 *      toDouble(1.1)   ==1.1;
+	 *      toDouble("1.1a1")==null;
+	 *      toDouble("$#.1a1")==null;
+	 */
+	public static Double toDouble(Object t){
+		if(t==null)return null;
+		else if(StringUtils.isBlank(t.toString())){
+			return null;
+		}else{
+			try{
+				return Double.parseDouble(t.toString());
+			}catch(Exception e){
+				return null;
+			}
+		}
+	}
 	
 	
 	/**
@@ -178,14 +183,30 @@ public class NumberUtils {
 			}
 		}
 	}
-        
+
+	/**
+	 *@author thender email: bentengwu@163.com
+	 *@date 2020/5/5 15:54
+	 *@param min 范围开始
+     *@param max  范围结束
+	 *@return int  生成一个随机的数字Z , min <= z <= max
+	 **/
+	public static int randomInt(int min, int max) {
+		return getRandom().nextInt(max - min) + min;
+	}
+
+
+	private static Random getRandom() {
+		return random;
+	}
         
 	public static void main(String args[]){
-		System.out.println(org.apache.commons.lang.math.NumberUtils.isDigits("1231"));
+//		System.out.println(org.apache.commons.lang.math.NumberUtils.isDigits("1231"));
 //		String result = format(3.95D,0);
-		System.out.println(format(new Double(13.41531),2));
-		System.out.println(isLong("569.9"));
-		System.out.println(clearFractionZero("3.90"));
+//		System.out.println(format(new Double(13.41531),2));
+//		System.out.println(isLong("569.9"));
+//		System.out.println(clearFractionZero("3.90"));
+		System.out.println(randomInt(5, 10));
 	}
 	
 }

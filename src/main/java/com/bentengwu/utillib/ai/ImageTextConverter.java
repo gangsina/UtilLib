@@ -95,19 +95,10 @@ public  class ImageTextConverter {
     }
 
 
-
-    public ConverterRet converter(File file, String lan, String dpi) {
-        try {
-            return new ConverterRet(newTesseract(lan,dpi).doOCR(file));
-        } catch (TesseractException ex) {
-            return new ConverterRet(ex);
-        }
-    }
-
-
     public ConverterRet converter(BufferedImage image) {
        return converter(image,"chi_sim","70");
     }
+
 
     public ConverterRet converter(BufferedImage image, String language, String dpi) {
         try {
@@ -115,6 +106,21 @@ public  class ImageTextConverter {
         } catch (Exception ex) {
             return new ConverterRet(ex);
         }
+    }
+
+    public ConverterRet converter(File imageFile, String language) {
+        return new ConverterRet(cmdConverter(imageFile.getAbsolutePath(),language));
+    }
+
+    /**
+     *@description  读取图片文件中的简单文字信息. 复杂文字目前还无法识别,需要外部的通过机器学习后的语言包才可识别.
+     *@author thender email: bentengwu@163.com
+     *@date 2020/4/28 11:09
+     *@param imageFile
+     *@return com.bentengwu.utillib.ai.ImageTextConverter.ConverterRet
+     **/
+    public ConverterRet converterRet(File imageFile) {
+        return converter(imageFile,"chi_sim");
     }
 
     /**
@@ -129,23 +135,71 @@ public  class ImageTextConverter {
      *@return java.lang.String 整个字符串
      **/
     public String cmdConverter(BufferedImage image, String language) throws IOException {
-        String systemTempPath = PathUtil.getTmpDir();
-        String filePath = systemTempPath  +"saguadan-wow-" +  DateUtil.getCurrentStringDate("yyyyMMddHHmmss");
-        File imgFile = new File(filePath);
-        ImageIO.write(image, "png", imgFile);
+        String filePath = writeImage(image);
+        return cmdConverter(filePath, language);
+    }
+
+    /**
+     * 通过命令行的方式来解析图片. 对应的图片将会被保存到系统的临时目录中.
+     *
+     * note: 比较重要, 由于硬盘的写入速度问题,需要1S的等待时间.才能读取到解析后的结果!
+     *
+     *@author thender email: bentengwu@163.com
+     *@date 2020/4/19 0:26
+     *@param filePath  图片路径
+     *@param language  chi_sim
+     *@return java.lang.String 整个字符串
+     **/
+    public String cmdConverter(String filePath, String language)  {
 
         String runCmd = StrUtils.replaceEach(cmd,new String[]{"$lan","$png_file","$text_file"},new String[]{language,filePath,filePath});
         UtilCmd.cmd(runCmd);
-        logger.debug("执行的命令是-->{}",runCmd);
-        UtilSleep.sleep(1000);//fixme 如果硬盘写入速度不够,可能这里的时间还要调整.
 
         File txtFile = new File(filePath + ".txt");
-        String strRet =  Rd.read(txtFile,"utf-8");
+        String strRet =  loopRead(txtFile);
 
-        // 清理临时文件
-        Rd.rm(imgFile);
         Rd.rm(txtFile);
         return strRet;
+    }
+
+    
+    public String writeImage(BufferedImage image) throws IOException
+    {
+        String systemTempPath = PathUtil.getTmpDir();
+        String filePath = systemTempPath  +"saguadan-wow-" +  DateUtil.getCurrentStringDate("yyyyMMddHHmmss");
+        writeImage(image, filePath);
+        return writeImage(image, filePath);
+    }
+
+    public String writeImage(BufferedImage image,String filePath) throws IOException
+    {
+        File imgFile = new File(filePath);
+        return writeImage(image,imgFile);
+    }
+
+
+    public String writeImage(BufferedImage image,File imgFile) throws IOException
+    {
+        ImageIO.write(image, "png", imgFile);
+        return imgFile.getAbsolutePath();
+    }
+
+
+    private String loopRead(File txt) {
+        String strRet =  null;
+        for (int i = 0; i < 200; i++) {
+            if (txt.exists() == false) {
+                UtilSleep.sleep(200);
+            }
+            strRet = Rd.read(txt,"utf-8");
+            if (StrUtils.isEmpty(strRet)) {
+                UtilSleep.sleep(200);
+            }else{
+                logger.debug("报告: 解析图片等待了{}次!,相当于{}秒!",i, i*0.2);
+                return strRet;
+            }
+        }
+        return null;
     }
 
     @Deprecated

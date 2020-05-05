@@ -1,8 +1,6 @@
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.google.common.collect.Maps;
 
@@ -19,10 +17,10 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class Test {
     public static void main(String[] args) throws IOException {
-		String password  = DigestUtils.md5Hex("123456");
-		System.out.println(password);
-		Set<String> set = new HashSet<>();
-		System.out.println(set.contains(null));
+//		String password  = DigestUtils.md5Hex("123456");
+//		System.out.println(password);
+//		Set<String> set = new HashSet<>();
+//		System.out.println(set.contains(null));
 
 //        TomcatServerXml tomcat = TomcatServerXml.getInstance("D:\\uninstall\\tomcat\\conf\\server.xml");
 //    	Rd.p(Math.pow(10, 4)-1);
@@ -38,10 +36,24 @@ public class Test {
 //    	long id_ = 100L;
 //
 //    	System.out.println(id==id_);
-		Map map = Maps.newHashMap();
+//		Map map = Maps.newHashMap();
+//
+//		map.put("1",1);
+//		System.out.println(map.toString());
 
-		map.put("1",1);
-		System.out.println(map.toString());
+		List list = new ArrayList();
+		for (int i = 0; i < 10; i++) {
+			list.add(i);
+		}
+		Collections.sort(list, new Comparator() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				return ((Integer)o1 - (Integer)o2)*-1;
+			}
+		});
 
+		for (Object aaa : list) {
+			System.out.println(aaa);
+		}
 	}
 }

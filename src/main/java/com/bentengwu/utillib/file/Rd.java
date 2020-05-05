@@ -203,7 +203,8 @@ public class Rd {
         try {
             return FileUtils.readFileToString(file, encode);
         } catch (Exception ex) {
-            throw new RuntimeException("Rd read error!  : " + ex.getMessage(), ex);
+            return null;
+//            throw new RuntimeException("Rd read error!  : " + ex.getMessage(), ex);
         }
     }
 
