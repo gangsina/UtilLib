@@ -184,4 +184,24 @@ public abstract class CollectionUtils {
         return newBytes;
     }
 
+    /**
+     *  判断数组中是否包含该对象,如果包含返回它的下标,如果不包含,则返回-1
+     *@author thender email: bentengwu@163.com
+     *@date 2020/5/8 12:59
+     *  *@param objs	数组
+     *@param item	检查的对象
+     *@return int {item} 在 {objs} 中的下标.  如果不存在或者两个参数存在null的情况都返回-1.
+     **/
+    public static final int getIndex(Object[] objs, Object item) {
+        if (objs == null || item == null) {
+            return -1;
+        }
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i].equals(item)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }
