@@ -1,6 +1,8 @@
 package com.bentengwu.utillib;
 
 import com.bentengwu.utillib.code.MD5;
+import com.bentengwu.utillib.file.PathUtil;
+import com.bentengwu.utillib.stream.StreamUtil;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,20 +42,11 @@ public class CommonUtils {
     
     // 获取类实际路径
     public static String getClassAbsolutePath() {
-        return getClassAbsolutePath("");
+        return PathUtil.getClassAbsolutePath("");
     }
 
     public static String getClassAbsolutePath(String suffix) {
-        String absolutePath = "";
-        try {
-            absolutePath = URLDecoder.decode(CommonUtils.class.getClassLoader()
-                    .getResource("").getFile(), "utf-8")
-                    + suffix;
-        } catch (Exception e) {
-            logger.debug(e.getMessage(),e);
-            logger.error(e.getMessage());
-        }
-        return absolutePath;
+        return PathUtil.getClassAbsolutePath(suffix);
     }
 
 
@@ -71,16 +64,7 @@ public class CommonUtils {
      */
     public static String getContentFromStream(InputStream in, String encoding)
             throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int bLen = 0;
-        while ((bLen = in.read(buffer)) > 0) {
-            baos.write(buffer, 0, bLen);
-        }
-        String xml = new String(baos.toByteArray(), encoding);
-        baos.close();
-        in.close();
-        buffer = null;
+        String xml = new String(getBytesFromStream(in), encoding);
         return xml;
     }
 
@@ -89,13 +73,18 @@ public class CommonUtils {
      */
     public static byte[] getBytesFromStream(InputStream in) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int bLen = 0;
-        while ((bLen = in.read(buffer)) > 0) {
-            baos.write(buffer, 0, bLen);
+        try{
+            byte[] buffer = new byte[1024];
+            int bLen = 0;
+            while ((bLen = in.read(buffer)) > 0) {
+                baos.write(buffer, 0, bLen);
+            }
+            return baos.toByteArray();
+        }finally {
+            StreamUtil.close(in);
+            StreamUtil.close(baos);
         }
-        in.close();
-        return baos.toByteArray();
+
     }
 
     /**

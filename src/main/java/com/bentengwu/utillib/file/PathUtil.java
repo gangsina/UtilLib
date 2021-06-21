@@ -1,12 +1,36 @@
 package com.bentengwu.utillib.file;
 
+import com.bentengwu.utillib.CommonUtils;
+import com.bentengwu.utillib.String.StrUtils;
+import org.apache.commons.lang.StringUtils;
+
 import java.net.URL;
+import java.net.URLDecoder;
 
 /**
  * 和路径相关的操作都放到这里.
  * @author 伟宏
  */
 public class PathUtil {
+    public static final String[] OSS = new String[]{"MS-DOS",
+            "Windows 1.0 - 2.0",
+            "Windows 3.0 – 3.1",
+            "Windows 95",
+            "Windows 98",
+            "Windows ME - Millennium Edition",
+            "Windows NT 31. - 4.0",
+            "Windows 2000",
+            "Windows XP",
+            "Windows Vista",
+            "Windows 7",
+            "Windows 8",
+            "Windows 10",
+            "Windows Server",
+            "Windows Home Server",
+            "Windows CE",
+            "Windows Mobile",
+            "Windows Phone 7-10"};
+
 	public static void main(String[] args) {
 		System.out.println(getClassPath());
 	}
@@ -110,6 +134,23 @@ public class PathUtil {
     }
 
     /**
+     *  判断是否为windows系统
+     *@author thender email: bentengwu@163.com
+     *@date 2020/6/9 15:14 
+     *  *@param 	
+     *@return boolean  true 是  false 否
+     **/
+    public static final boolean isWinSystem() {
+        String os = getOsName();
+        for (String item : OSS) {
+            if (os.equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 获取操作系统版本
      * @return  操作系统版本
      */
@@ -119,6 +160,35 @@ public class PathUtil {
         }
         return osVersion;
     }
+
+
+    // 获取类实际路径
+    public static String getClassAbsolutePath() {
+        return getClassAbsolutePath("");
+    }
+    
+    /**
+     *  读取绝对路径
+     *@author thender email: bentengwu@163.com
+     *@date 2020/6/9 15:17 
+     *  *@param suffix	 在绝对路径下添加后缀
+     *@return java.lang.String
+     **/
+    public static String getClassAbsolutePath(String suffix) {
+        String absolutePath = "";
+        try {
+            absolutePath = URLDecoder.decode(CommonUtils.class.getClassLoader()
+                    .getResource("").getFile(), "utf-8")
+                    + suffix;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (PathUtil.isWinSystem() && StringUtils.startsWith(absolutePath,"/")) {
+            absolutePath = StringUtils.removeStart(absolutePath, "/");
+        }
+        return absolutePath;
+    }
+
     
     private static String osVersion = null;
     private static String osName = null;

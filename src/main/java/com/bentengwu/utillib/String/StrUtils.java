@@ -372,22 +372,52 @@ public class StrUtils {
 	public static String replaceEach(String src, String[] bf, String[] after) {
 		return StringUtils.replaceEach(src, bf, after);
 	}
+
+	/**
+	 *
+	 *@author thender email: bentengwu@163.com
+	 *@date 2020/9/10 13:35
+	 *  *@param src
+		 *@param len
+		 *@param suffix
+	 *@return
+	 * 	  replaceEndStr("xuweihong",2,"jjjx") = "xuweihojjjx"
+	 * 	  replaceEndStr("xuweihong",-2,"jjjx") = "xuweihojjjx"
+	 * 	  replaceEndStr("xuweihong",-2,null) = "xuweiho"
+	 * 	  replaceEndStr("xuweihong",-2,"") = "xuweiho"
+	 * 	  replaceEndStr(null,-2,"jjjx") = null
+	 **/
+	public static String replaceEndStr(final String src, final int len, final String suffix) {
+		if (src == null ) {
+			return null;
+		}
+		String _suffix = suffix;
+		if (_suffix == null) {
+			_suffix = "";
+		}
+		return src.substring(0,src.length() + (Math.abs(len) * -1)) + _suffix;
+	}
 	
 	public static void main(String[] args) {
-		System.out.println(replaceStrByIndex("https://adsfa?adsfa=?", "?", 1, "小名"));
+//		System.out.println(replaceStrByIndex("https://adsfa?adsfa=?", "?", 1, "小名"));
+//
+//		String[] args1 = splitFirst("-1,asdf,asdfa,asdf", ",");
+//		for (String arg : args1) {
+//			System.out.println(arg);
+//
+//		}
+//
+//		args1 = splitFirst(",-1", ",");
+//		for (String arg : args1) {
+//			System.out.println(arg);
+//
+//		}
 
-		String[] args1 = splitFirst("-1,asdf,asdfa,asdf", ",");
-		for (String arg : args1) {
-			System.out.println(arg);
-
-		}
-
-		args1 = splitFirst(",-1", ",");
-		for (String arg : args1) {
-			System.out.println(arg);
-
-		}
-	}
+		System.out.println(replaceEndStr("xuweihong",-2,"jjjx")); ;
+		System.out.println(replaceEndStr("xuweihong",-2,null)); ;
+		System.out.println(replaceEndStr("xuweihong",-2,"")); ;
+		System.out.println(replaceEndStr(null,-2,"jjjx")); ;
+	};
 	/**
 	 * 替换字符串
 	 *<br />
@@ -462,7 +492,7 @@ public class StrUtils {
 
 	/**
 	 * 将字符串转化为字节数组;
-	 * @param data
+	 * @param datajj
 	 * @return 按照utf-8的编码转化为字节数组;
 	 */
 	public static final byte[] getBytesUTF8(String data) {
