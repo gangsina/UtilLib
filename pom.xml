@@ -26,10 +26,10 @@
 	</properties>
 
 	<repositories>
-		<repository>
-			<id>thirdparty</id>
-			<url>http://192.168.2.253:3030/nexus/content/repositories/thirdparty</url>
-		</repository>
+<!--		<repository>-->
+<!--			<id>thirdparty</id>-->
+<!--			<url>http://192.168.2.253:3030/nexus/content/repositories/thirdparty</url>-->
+<!--		</repository>-->
 		<repository>
 			<id>nexus-aliyun</id>
 			<name>Nexus aliyun</name>
